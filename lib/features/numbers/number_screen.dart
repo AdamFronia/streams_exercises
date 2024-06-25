@@ -15,8 +15,29 @@ class NumberScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Number Screen'),
       ),
-      body: const Center(
-        child: Text("Hier sollen die Zahlen stehen"),
+      body: Center(
+        child: StreamBuilder<List<int>>(
+          stream: numberRepository.numberStream,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Text('Keine Zahlen verfügbar');
+            } else {
+              final numbers = snapshot.data!;
+              return ListView.builder(
+                itemCount: numbers.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(numbers[index].toString()),
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

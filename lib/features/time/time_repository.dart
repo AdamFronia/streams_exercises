@@ -3,4 +3,6 @@ class TimeRepository {
     const Duration(seconds: 1),
     (i) => DateTime.now(),
   );
+
+  get timeStream => null;
 }
